@@ -5,7 +5,7 @@ from django.template import Context
 from nose import tools
 
 from ella.core.models import Publishable
-from ella.core.box import Box
+from ella.box.box import Box
 from ella.articles.models import Article
 
 from test_ella.test_core import create_basic_categories, create_and_place_a_publishable

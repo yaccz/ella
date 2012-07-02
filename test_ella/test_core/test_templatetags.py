@@ -10,7 +10,8 @@ from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
 
-from ella.core.templatetags.core import listing_parse, ListingNode, _parse_box, BoxNode, EmptyNode
+from ella.core.templatetags.core import listing_parse, ListingNode
+from ella.box.templatetags.box import _parse_box, BoxNode, EmptyNode
 from ella.core.templatetags.pagination import _do_paginator
 from ella.core.models import Category
 from ella.core.managers import ListingHandler
