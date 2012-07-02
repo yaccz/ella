@@ -22,6 +22,9 @@ CACHE_TIMEOUT = getattr(settings, 'CACHE_TIMEOUT', 10*60)
 PUBLISHABLE_CT = None
 def _get_publishable_ct():
     global PUBLISHABLE_CT
+    if not 'ella.core' in settings.INSTALLED_APPS:
+        return None
+
     if PUBLISHABLE_CT is None:
         PUBLISHABLE_CT = ContentType.objects.get_for_model(get_model('core', 'publishable'))
     return PUBLISHABLE_CT
@@ -38,7 +41,7 @@ def normalize_key(key):
     return md5(key).hexdigest()
 
 def _get_key(start, model, pk=None, **kwargs):
-    if issubclass(model.model_class(), _get_publishable_ct().model_class()):
+    if _get_publishable_ct() and issubclass(model.model_class(), _get_publishable_ct().model_class()):
         model = PUBLISHABLE_CT
 
     if pk and not kwargs:
