@@ -8,7 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.template import Template, TemplateSyntaxError
 from django.core.exceptions import ValidationError
 
-from ella.core.box import Box
+from ella.box.box import Box
 from ella.core.cache import cache_this, CachedGenericForeignKey, \
     CategoryForeignKey, ContentTypeForeignKey, get_cached_object
 

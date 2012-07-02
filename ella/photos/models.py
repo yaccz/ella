@@ -17,7 +17,7 @@ from django.template.defaultfilters import slugify
 from jsonfield.fields import JSONField
 
 from ella.core.models.main import Author, Source
-from ella.core.box import Box
+from ella.box.box import Box
 from ella.core.cache.utils import get_cached_object
 from ella.photos.conf import photos_settings
 
@@ -71,7 +71,7 @@ def upload_to(instance, filename):
 class Photo(models.Model):
     """
     Represents original (unformated) photo uploaded by user. Used as source
-    object for all the formatting stuff and to keep the metadata common to 
+    object for all the formatting stuff and to keep the metadata common to
     all related ``FormatedPhoto`` objects.
     """
     box_class = PhotoBox
@@ -190,9 +190,9 @@ class FormatManager(models.Manager):
 class Format(models.Model):
     """
     Defines per-site photo sizes together with rules how to adhere to them.
-    
+
     This includes:
-    
+
     * maximum width and height
     * cropping settings
     * stretch (rescale) settings

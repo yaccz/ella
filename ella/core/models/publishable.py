@@ -12,7 +12,7 @@ from django.core.exceptions import ValidationError
 
 from jsonfield.fields import JSONField
 
-from ella.core.box import Box
+from ella.box.box import Box
 from ella.core.conf import core_settings
 from ella.core.signals import content_published, content_unpublished
 from ella.core.cache import CachedGenericForeignKey, \
