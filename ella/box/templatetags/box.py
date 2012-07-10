@@ -103,7 +103,7 @@ def do_box(parser, token):
     Boxes are always rendered in current context with added variables:
 
     * ``object`` - object being represented
-    * ``box`` - instance of ``ella.core.box.Box``
+    * ``box`` - instance of ``ella.box.Box``
 
     Usage::
 
