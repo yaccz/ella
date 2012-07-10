@@ -8,7 +8,7 @@ from ella.core.cache.utils import get_cached_object
 from ella.box.box import Box
 
 
-log = logging.getLogger('ella.core.templatetags')
+log = logging.getLogger(__name__)
 register = template.Library()
 
 class ObjectNotFoundOrInvalid(Exception): pass
