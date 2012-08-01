@@ -19,11 +19,20 @@ KEY_PREFIX = 'core.gco'
 CACHE_TIMEOUT = getattr(settings, 'CACHE_TIMEOUT', 10*60)
 
 
+def _get_publishable():
+    "Return ella.core.models.Publishable if ella.core is installed, otherwise None"
+    if not 'ella.core' in settings.INSTALLED_APPS:
+        return None
+
+    Publishable = get_model('core', 'publishable')
+    if not Publishable:
+        raise ValueError("Model core.publishable expected")
+
 PUBLISHABLE_CT = None
 def _get_publishable_ct():
     global PUBLISHABLE_CT
     if PUBLISHABLE_CT is None:
-        PUBLISHABLE_CT = ContentType.objects.get_for_model(get_model('core', 'publishable'))
+        PUBLISHABLE_CT = ContentType.objects.get_for_model(_get_publishable())
     return PUBLISHABLE_CT
 
 @receiver(post_save)
@@ -38,7 +47,7 @@ def normalize_key(key):
     return md5(key).hexdigest()
 
 def _get_key(start, model, pk=None, **kwargs):
-    if issubclass(model.model_class(), _get_publishable_ct().model_class()):
+    if _get_publishable() and issubclass(model.model_class(), _get_publishable()):
         model = PUBLISHABLE_CT
 
     if pk and not kwargs:
