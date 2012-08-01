@@ -115,6 +115,15 @@ class TestListContentType(ViewsTestCase):
         create_and_place_more_publishables(self)
         list_all_publishables_in_category_by_hour(self, category=self.category)
 
+    def test_without_home_listings_first_page_is_an_archive(self):
+        self.category_nested_second.app_data.setdefault('ella', {})['no_home_listings'] = True
+        self.category_nested_second.save()
+        template_loader.templates['page/listing.html'] = ''
+        Listing.objects.all().update(category=self.category_nested_second)
+        response = self.client.get('/nested-category/second-nested-category/?p=1')
+        tools.assert_true('listings' in response.context)
+        tools.assert_equals(self.listings, response.context['listings'])
+
     def test_only_nested_category_and_year_returns_all_listings(self):
         template_loader.templates['page/listing.html'] = ''
         Listing.objects.all().update(category=self.category_nested_second)
@@ -215,6 +224,29 @@ class TestObjectDetail(ViewsTestCase):
             'http://testserver/nested-category/%d-first-article/' % self.publishable.id,
             response['Location']
         )
+
+    def test_static_object_detail_redirects_to_correct_url_on_wrong_category(self):
+        self.publishable.static = True
+        self.publishable.save()
+        response = self.client.get('/nested-category/second-nested-category/%d-%s/' % (self.publishable.id, self.publishable.slug))
+
+        tools.assert_equals(301, response.status_code)
+        tools.assert_equals(
+            'http://testserver/nested-category/%d-first-article/' % self.publishable.id,
+            response['Location']
+        )
+
+    def test_static_redirects_preserve_custom_url_remainder(self):
+        self.publishable.static = True
+        self.publishable.save()
+        response = self.client.get('/nested-category/second-nested-category/%d-%s/some/custom/url/action/' % (self.publishable.id, self.publishable.slug))
+
+        tools.assert_equals(301, response.status_code)
+        tools.assert_equals(
+            'http://testserver/nested-category/%d-first-article/some/custom/url/action/' % self.publishable.id,
+            response['Location']
+        )
+
 
     def test_static_object_detail(self):
         self.publishable.static = True

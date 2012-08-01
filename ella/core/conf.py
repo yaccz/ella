@@ -1,4 +1,5 @@
 from ella.utils.settings import Settings
+from ella.utils.timezone import utc_localize
 from django.utils.datetime_safe import datetime
 
 gettext = lambda s: s
@@ -16,11 +17,8 @@ MEDIA_KEY = 'ella.core.box.MEDIA_KEY'
 
 # Publishing configuration
 CATEGORY_LISTINGS_PAGINATE_BY = 20
-DEFAULT_LISTING_PRIORITY = 0
-USE_PRIORITIES = False
-LISTING_UNIQUE_DEFAULT_SET = 'unique_set_default'
-PUBLISH_FROM_WHEN_EMPTY = datetime(3000, 1, 1)
-LISTING_USE_COMMERCIAL_FLAG = False
+CATEGORY_NO_HOME_LISTINGS = False
+PUBLISH_FROM_WHEN_EMPTY = utc_localize(datetime(3000, 1, 1))
 
 RELATED_FINDERS = {
     'default': (
@@ -55,6 +53,6 @@ RSS_DESCRIPTION_BOX_TYPE = 'rss_description'
 ECACHE_INFO = 'ella.core.middleware.ECACHE_INFO'
 
 # templates
-ARCHIVE_TEMPLATE = True
+ARCHIVE_TEMPLATE = 'listing.html'
 
 core_settings = Settings('ella.core.conf', '')

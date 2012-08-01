@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-import datetime, time
+import time
 
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.forms import models as modelforms
@@ -14,10 +14,11 @@ from django.conf import settings
 
 from ella.core.models import Author, Source, Category, Listing, Related, Publishable
 from ella.core.conf import core_settings
+from ella.utils.timezone import now
 
-import newman
-from newman import options, fields
-from newman.filterspecs import CustomFilterSpec, NewmanSiteFilter
+import ella_newman as newman
+from ella_newman import options, fields
+from ella_newman.filterspecs import CustomFilterSpec, NewmanSiteFilter
 
 class ListingForm(modelforms.ModelForm):
     def clean(self):
@@ -211,7 +212,7 @@ class PublishableAdmin(newman.NewmanModelAdmin):
 
         if obj.publish_from.year >= 3000:
             return mark_safe(span_str % ('unpublished', ugettext('No placement')))
-        elif obj.publish_from > datetime.datetime.now():
+        elif obj.publish_from > now():
             return span_str % ('unpublished', date_str)
         return span_str % ('published', date_str)
     publish_from_nice.short_description = _('Publish from')
@@ -220,7 +221,7 @@ class PublishableAdmin(newman.NewmanModelAdmin):
 
     def photo_thumbnail(self, object):
         if object.photo:
-            return mark_safe(object.photo.thumb())
+            return mark_safe(options.thumb_html(object.photo))
         else:
             return mark_safe('<span class="form-error-msg">%s</span>' % ugettext('No main photo!'))
     photo_thumbnail.allow_tags = True
